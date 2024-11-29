@@ -1,0 +1,56 @@
+services:
+  database-service:
+    build:
+      context: ./database-service
+      args:
+        MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+        MYSQL_DATABASE: ${MYSQL_DATABASE}
+    image: database-service:v1
+    container_name: database-container
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MYSQL_DATABASE: ${MYSQL_DATABASE}
+      MYSQL_ROOT_HOST: '%'
+      MYSQL_LOG_CONSOLE: "true"
+    ports:
+      - "3306:3306"
+    volumes:
+      - db_data:/var/lib/mysql
+      - ./database-service/sql/:/docker-entrypoint-initdb.d/
+    security_opt:
+      - no-new-privileges:true
+    networks:
+      - candidate-service-network
+
+  redis-server:
+    image: redis:alpine
+    container_name: redis-container
+    ports:
+      - "6379:6379"
+    networks:
+      - candidate-service-network
+
+  candidate-service:
+    build:
+      context: ./candidate-service
+    image: candidate-service:v1
+    container_name: candidate-service-container
+    ports:
+      - "8080:8080"
+    depends_on:
+      database-service:
+        condition:
+          service_healthy
+      redis-server:
+        condition: service_started
+    networks:
+      - candidate-service-network
+    security_opt:
+      - no-new-privileges:true
+
+volumes:
+  db_data:
+  
+networks:
+  candidate-service-network:
+    driver: bridge

@@ -1,0 +1,11 @@
+FROM mysql/mysql-server:8.0.32
+
+# Accept build arguments
+ARG MYSQL_ROOT_PASSWORD
+ARG MYSQL_DATABASE
+
+# Set environment variables
+ENV MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
+ENV MYSQL_DATABASE=${MYSQL_DATABASE}
+
+EXPOSE 3306
