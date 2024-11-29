@@ -1,12 +1,4 @@
-name: Docker Image CI
-
-on:
-  push:
-    branches: [ "main" ]
-  pull_request:
-    branches: [ "main" ]
-aname: Candidate Service CI/CD Pipeline
-
+name: Candidate Service CI/CD Pipeline
 on:
   push:
     branches:
