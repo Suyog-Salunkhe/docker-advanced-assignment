@@ -70,13 +70,3 @@ jobs:
       # Step 11: Clean up the Docker environment after tests
       - name: Tear down services
         run: docker-compose down
-jobs:
-
-  build:
-
-    runs-on: ubuntu-latest
-
-    steps:
-    - uses: actions/checkout@v4
-    - name: Build the Docker image
-      run: docker build . --file Dockerfile --tag my-image-name:$(date +%s)
